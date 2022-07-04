@@ -12,4 +12,14 @@ export class Colors {
     static tabBarBadgeTextColor = "white"
     static tabBarLabelColor = "rgba(255, 255, 255, 1)";
     static tabBarLabelFocusColor = "yellow";
+
+    // Search Components
+    static searchBarTitle = "black";
+    static searchBarBackground = "white";
+    static searchBarBorder = "black";
+    static searchBarContent = "black";
+    static inputTitle = "black";
+    static inputBackground = "white";
+    static inputBorder = "black";
+    static inputContent = "black";
 };
