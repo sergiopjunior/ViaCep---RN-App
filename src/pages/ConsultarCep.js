@@ -3,61 +3,45 @@ import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity } from 
 import { Colors } from "../assets/js/constants";
 import { getHeight, getWidth, normalize } from "../assets/js/functions";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CepList from "../components/CepList";
+import { searchCep } from "../services/viaCep";
+import { useState, useCallback } from "react";
+import { useAppContext } from "../hooks/appHooks";
 
 const ConsultarCep = () => {
+    const [, updateState] = useState();
+    const forceUpdate = useCallback(() => updateState({}), []);
+    const [cepToSearch, setCepToSearch] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const {getCep} = useAppContext();
+    
     return (
-        <ScrollView style={styles.container}>
-            <View style={{flex: 1, marginHorizontal: 5}}>
-                <Text style={styles.searchBarTitle}>CEP</Text>
+        <View style={styles.container}>
+            <View style={{marginHorizontal: 5}}>
+                <Text id style={styles.searchBarTitle}>CEP</Text>
                 <View style={styles.serachBarContainer}>           
-                    <TextInput numberOfLines={1} style={[styles.input, styles.CEP]}/>
-                    <TouchableOpacity style={styles.buttonContainer}>
+                    <TextInput onChangeText={(value) => {setCepToSearch(value); console.log(value);}} numberOfLines={1} style={[styles.input, styles.CEP]}/>
+                    <TouchableOpacity onPress={
+                        () => {
+                            if (cepToSearch != "")
+                            {   
+                                getCep(cepToSearch);
+                                setShowResults(true);
+                                //forceUpdate();
+                            }
+                        }
+                    } style={styles.buttonContainer}>
                             <Text style={styles.buttonItem}>Buscar</Text>
                             <Icon style={styles.buttonItem} name="search" size={normalize(24)} color={"black"} />
                     </TouchableOpacity>
                 </View>
             </View>    
-            <View style={styles.inlineContainer}>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.inputTitle}>UF</Text>
-                    <TextInput numberOfLines={1} style={[styles.input, styles.UF]}/>              
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.inputTitle}>DDD</Text>
-                    <TextInput numberOfLines={1} style={[styles.input, styles.DDD]}/>
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.inputTitle}>SIAFI</Text>
-                    <TextInput numberOfLines={1} style={[styles.input, styles.SIAFI]}/>
-                </View>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.inputTitle}>Logradouro</Text>
-                <TextInput numberOfLines={1} style={styles.input}/>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.inputTitle}>Complemento</Text>
-                <TextInput numberOfLines={1} style={styles.input}/>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.inputTitle}>Bairro</Text>
-                <TextInput numberOfLines={1} style={styles.input}/>
-            </View>
-            <View style={styles.inputContainer}>
-                <Text style={styles.inputTitle}>Localidade</Text>
-                <TextInput numberOfLines={1} style={styles.input}/>
-            </View>
-            <View style={styles.inlineContainer}>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.inputTitle}>IBGE</Text>
-                    <TextInput numberOfLines={1} style={[styles.input, styles.IBGE]}/>
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.inputTitle}>GIA</Text>
-                    <TextInput numberOfLines={1} style={[styles.input, styles.GIA]}/>
-                </View>
-            </View>       
-        </ScrollView>
+            {
+                showResults ?
+                <CepList cep={cepToSearch}/> : 
+                <Text></Text>
+            }
+        </View>
     );
 };
 
