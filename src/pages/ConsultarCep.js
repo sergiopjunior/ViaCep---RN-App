@@ -38,7 +38,7 @@ const ConsultarCep = () => {
             </View>    
             {
                 showResults ?
-                <CepList cep={cepToSearch}/> : 
+                <CepList/> : 
                 <Text></Text>
             }
         </View>
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     searchBarTitle: {
+        paddingHorizontal: 5,
         fontSize: normalize(18),
         color: Colors.inputTitle,
     },

@@ -1,66 +1,44 @@
 import React from "react";
 import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
-import { useState } from "react/cjs/react.development";
 import { Colors } from "../assets/js/constants";
 import { normalize } from "../assets/js/functions";
 import { useAppContext } from "../hooks/appHooks";
 import { searchCep, testList } from "../services/viaCep";
 
-const CepList = ({cep}) => {
+const CepList = () => {
     const {resultList} = useAppContext();
+    const upperCaseKeys = ["cep", "uf", "ibge", "gia", "ddd", "siafi"];
 
-    const RenderItem = ({ item }) => {
+    const firstCase = (values) => {
+        return values.charAt(0).toUpperCase() + values.slice(1);
+    }
+
+    const RenderItem = ({item}) => {
+        const element = (key, value) => {
+            return (
+                <View key={key} style={styles.textContainer}>
+                        <Text style={styles.textTitle}>{
+                        upperCaseKeys.includes(key) ? 
+                        key.toUpperCase() : 
+                        firstCase(key)
+                        }:
+                        </Text>
+                        <Text style={styles.textContent}>{value}</Text>
+                </View>
+            );
+        };
         return (
             <View style={styles.itemContainer}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>CEP:</Text>
-                    <Text style={styles.textContent}>{item.cep}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>Logradouro:</Text>
-                    <Text style={styles.textContent}>{item.logradouro}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>Complemento:</Text>
-                    <Text style={styles.textContent}>{item.complemento}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>Bairro:</Text>
-                    <Text style={styles.textContent}>{item.bairro}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>Localidade:</Text>
-                    <Text style={styles.textContent}>{item.localidade}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>UF:</Text>
-                    <Text style={styles.textContent}>{item.uf}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>IBGE:</Text>
-                    <Text style={styles.textContent}>{item.ibge}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>GIA:</Text>
-                    <Text style={styles.textContent}>{item.gia}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>DDD:</Text>
-                    <Text style={styles.textContent}>{item.ddd}</Text>
-                </View>
-                <View style={styles.textContainer}>
-                    <Text style={styles.textTitle}>SIAFI:</Text>
-                    <Text style={styles.textContent}>{item.siafi}</Text>
-                </View>
+                 {[...Object.keys(item)].map((key) => element(key, item[key]))}    
             </View>
         );
     };
 
     return (
         <View style={styles.listContainer}>
-            {resultList.length ?
+            {testList.length ?
             <FlatList
-            data={resultList}
+            data={testList}
             scrollEnabled={true}
             keyExtractor={item => item.cep}
             ItemSeparatorComponent={() => <View style={styles.separator}/>}
@@ -81,6 +59,7 @@ const styles = StyleSheet.create({
         //backgroundColor: "red",
     },
     itemContainer: {
+        padding: 5,
         backgroundColor: "rgba(240, 240, 240, 1)",
     },
     separator: {
